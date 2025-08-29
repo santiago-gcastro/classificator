@@ -52,6 +52,26 @@ class DateDestinationCriterion(DestinationCriterion):
 class TypeDestinationCriterion(DestinationCriterion):
     def _calculate(self, source_file, base_path):
         return os.path.join(base_path, source_file.file_type())
+    
+class OriginPathDestinationCriterion(DestinationCriterion):
+    __path_chunk = None
+    def __init__(self, command_criteria):
+        super().__init__()
+        if "=" in command_criteria:
+            self.__path_chunk = command_criteria[command_criteria.rfind("=") + 1:]
+        if self.__path_chunk is None:
+            self._logger.warning("Criteria path has to include a value as path=value")
+
+    def _calculate(self, source_file, base_path):
+        if self.__path_chunk is not None:
+            out_path = base_path
+            path_uncollapse = os.path.split(source_file.file_path())
+            for folder in path_uncollapse:
+                if self.__path_chunk in folder:
+                    out_path = os.path.join(out_path, folder)
+            return out_path
+        return base_path
+
 
 class CriterionFactory:
     @staticmethod
@@ -63,9 +83,8 @@ class CriterionFactory:
                 destinationCriteria.append(DateDestinationCriterion())
             elif criterion == "type" :
                 destinationCriteria.append(TypeDestinationCriterion())
+            elif "path" in criterion:
+                destinationCriteria.append(OriginPathDestinationCriterion(criterion))
             else:
-                loggeable.IsLoggeable.get_logger().warn(f"Criteria #{criterion}# not valid. Only date or type are valid criteria")
+                loggeable.IsLoggeable.get_logger(CriterionFactory.__name__, __name__).warning(f"Criteria #{criterion}# not valid. Only date or type are valid criteria")
         return destinationCriteria
-
-
-

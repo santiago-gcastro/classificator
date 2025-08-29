@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description="Add destination base path. [option
 # Add arguments
 parser.add_argument("-o", "--origin", type=str, default="./", help="Origin base path (optional)")
 parser.add_argument("-d", "--destination", default="../out", type=str, help="Destination base path (optional)")
-parser.add_argument("-c","--criteria", type=str, default="date", help="Classification criteria. The criterion can ve piped with |. Valid criteria: <date> (optional)")
+parser.add_argument("-c","--criteria", type=str, default="date", help="Classification criteria. The criterion can ve piped with |. Valid criteria: <date, type, path=key_word> (optional)")
 parser.add_argument("-dl","--debuglevel", type=str, default="false", help="Debug level (optional)")
 
 # Parse arguments

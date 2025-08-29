@@ -19,6 +19,9 @@ class File:
     
     def file_type(self):
         return self.__name[self.__name.rfind(".") + 1:]
+    
+    def file_path(self):
+        return self.__path
 
     def creation_time_stamp_as_string(self):
         return datetime.datetime.fromtimestamp(self.__creation_time).strftime("%Y-%m-%d %H:%M:%S")
